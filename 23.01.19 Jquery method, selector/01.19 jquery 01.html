@@ -1,0 +1,69 @@
+<!-- 자동완성 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+    crossorigin="anonymous"></script>
+    <!--라이브러리 (로당) 선언 후에 작성한 자바스크립트를 호출. "순서 영향"-->
+
+    <link rel="stylesheet" href ="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+   <script src="./js/0119_jquery01.js"></script>
+
+
+    
+    <!-- bootstrap cdn을 포함해서 제공하는 css를 이용해 봄. -->
+
+</head>
+<body>
+    <!-- ul 하위 목록 li /  -->
+    <!-- browser에서 사용자가 발생시킬수 있는 event의 종류가 정해져 있음.
+        Click, dblclick (더블클릭), change, mouseover, mouseenter, 
+        mouseleave, keypress, keyup, keydown ... 
+    -->
+    <!-- 이런 event에 대해.. html에 입장에서 이런 event를 처리할 수 있음. 
+        상당히 쉬운방법으로 event처리를 할 수 있도록 제공함.
+        inline event model 
+        tag의 속성을 이용해서 event를 처리하는 방식.
+    -->
+    <!-- "사용하는 속성은 on + event이름" -->
+    <!-- 
+    <select onchange="myFunc()">
+        <option>홍길동</option>
+        <option>신사임당</option>
+        <option>강감찬</option>
+        <option>이순신</option>
+    </select>
+    -->
+
+     <select onchange="myAcc()">
+        <option>홍길동</option>
+        <option>신사임당</option>
+        <option>강감찬</option>
+        <option>이순신</option>
+    </select>  
+    
+    <br><Br>
+    <!-- 이벤트가 발생한 객체가 이벤트 소스이므로 
+        event source : event element가 되요. // 옳지 못한 표현 , 
+
+    div의 eleement가 dom안에 있는 div element로 만든 node를 지칭 => "div 객체이며, 이벤트 소스"  -->
+    <!-- div의 엘리먼트가 아닌 "DOM 구조의 div가 변경"되는 작업과 css 구조 결합 후 화면에 출력 과정을 이해 -->
+    <!-- <div onclick="myFunc()">여기에 선택되니 사람이 출력되요</div> 원클릭 -->
+    <!-- div 이벤트 소스, "myfunc' delegation의 이벤트 핸들러 -->
+     <div ondblclick="myFunc()">여기에 선택되니 사람이 출력되요</div> 
+    
+     <br><br>
+     <!-- 구시대 버전 -->
+     <input type="button" value="서버로 전송">
+     <!-- 보편적인 버전 -->
+     <br><br>
+     <!-- bootstrep 라이브러리 통해 class 속성 전달. 어떤 이미지로 있는지 정도 파악. -->
+     <!-- <button class="btn btn-warning">이것도 서버로 전송 버튼</button>    -->
+     <!-- <button class="btn btn-danger">이것도 서버로 전송 버튼</button>    -->
+     <!-- <button class="btn btn-info">이것도 서버로 전송 버튼</button>    -->
+     <button class="btn btn-primary">이것도 서버로 전송 버튼</button>   
+</body>
+</html>

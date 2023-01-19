@@ -1,0 +1,36 @@
+<!-- 이 파일은 0118 jquery01 htnl-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Document</title>
+    <!-- jquery를 사용하기 위한 CDN을 설정 , jquery 기능 이용-->
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+     crossorigin="anonymous"></script>
+     <!--라이브러리 (로당) 선언 후에 작성한 자바스크립트를 호출. "순서 영향"-->
+    <script src="./js/0118_jquery01.js "></script>
+
+
+</head>
+<body>
+   <h1 id="a">여기는 h1 입니다.</h1> 
+   <!-- div는 보여주기능이 아닌 안의 내용을 하나로 묶는 용도 (그릇)-->
+   <div>
+        <div class="myClass">가장 좋아하는 가수는? </div>
+        <ul>
+            <li>홍길동</li>
+            <li id="shin">신사임당</li>
+            <!--$('#shin')-->
+            <!-- $('ul > li') 자식으로 포함된 하위 4개를 수행. -->
+            
+            <li id="gang">강감찬</li>
+            <li> 이순신</li>
+        </ul>
+   </div>
+   <!-- 지금하는 방식은 inline event model 방식이라는 html이 가지는 이벤트 처리방식.! // html이 가지는 이벤트 처리 방식 // 
+        속성을 이용함. (Attribute 이용)  onclick 클릭이 되면 이벤트를 수행 "가장 간단" -->
+   <input type="button" value="클릭해보세요.!"
+   onclick="myfunc()">
+</body>
+</html>

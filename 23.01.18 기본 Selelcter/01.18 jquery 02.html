@@ -1,0 +1,46 @@
+
+<!-- 교수님 오후에 작업을 활용한 문제 제시. -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Document</title>
+
+        <!-- jquery를 사용하기 위한 CDN을 설정 , jquery 기능 이용-->
+        <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+        crossorigin="anonymous"></script>
+        <!--라이브러리 (로당) 선언 후에 작성한 자바스크립트를 호출. "순서 영향"-->
+       <script src="./js/0118_jquery02.js"></script>
+   
+</head>
+<body>
+    <div>
+        <ul>
+            <li id="apple">사과</li>
+            <li>파인애플</li>
+            <li class="myList">참외</li>
+        </ul>
+        <form action="#" method="post"> 
+            <input type="text" id="myId" size="20">
+        </form>
+        <ol>
+            <li clsss="myList">고양이</li>
+            <li clsss="myList">호랑이</li>
+            <li clsss="myList">강아지</li>
+        </ol>
+    </div>
+    <!-- 원하는 결과값 -->
+    <!-- 버튼을클릭하면, 다음과 같은 순서대로 console에 입력하세요.
+        사과
+        파인애플 
+        참외
+         myId, 
+         고양이 
+         호랑이
+         강아지
+    -->
+    <input type="button" value="클릭클릭!!" onclick="func()">
+</body>
+</html>

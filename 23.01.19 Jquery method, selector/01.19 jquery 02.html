@@ -1,0 +1,68 @@
+<!-- 자동완성 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+    crossorigin="anonymous"></script>
+    <!--라이브러리 (로당) 선언 후에 작성한 자바스크립트를 호출. "순서 영향"-->
+    <!-- bootstrap cdn을 포함해서 제공하는 css를 이용해 봄. -->
+    <link rel="stylesheet" href ="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    
+   <script src="./js/0119_jquery02.js"></script>
+
+   <style>
+    .myEnterStyle{
+        color: red;
+        background-color: yellow;
+    }
+    .myDiv {
+        width: 400px;
+        height: 200px;
+        background-color: yellow;
+    }
+   </style>
+  
+  
+
+</head>
+<body>
+    <br><br>
+    <!-- 나중에 jquery event 할때 비교해서 살펴범 각 항목에서 발생하는 것보다, 부모 객체를 통해서 수행하는 것이 어떤지? -지금은 제대로 동장하지 않음
+        html event처리로는 원하는 일을 할수 없음.
+    -->
+    <!--   <ul >
+        <li onmouseenter="myMouseEnter()"
+        onmouseleave="myMouseLeave()">홍길동</li>
+        <li onmouseenter="myMouseEnter()"
+        onmouseleave="myMouseLeave()">신사임당</li>
+        <li onmouseenter="myMouseEnter()"
+        onmouseleave="myMouseLeave()">강감찬</li>
+        <li onmouseenter="myMouseEnter()"
+            onmouseleave="myMouseLeave()">이순신</li>
+         myMosueEnter가 이벤트 핸들러.ㄴ 
+
+       마우스를 갖다대면 변화하는 이벤트 
+    </ul> 
+    -->
+    <ul onmouseenter="myMouseEnter()"
+    onmouseleave="myMouseLeave()" >
+        <li>홍길동</li>
+        <li>신사임당</li>
+        <li>강감찬</li>
+        <li>이순신</li>
+        <!-- myMosueEnter가 이벤트 핸들러.ㄴ -->
+
+        <!-- 마우스를 갖다대면 변화하는 이벤트 -->
+    </ul>
+    <br><br>
+    <div class="myDiv" onclick="secondFunc()">
+        <button class="btn btn-danger" onclick="myFunc()">여기는 버튼이에예요.</button>
+        <!-- 이벤트 Event propagation (전진 침투) 현상이 발생 나를 포함한 태그까지 전파 
+        클릭이 이벤트가 버튼 및 나의 부모한테까지 전파.
+        -->
+    </div>
+</body>
+</html>

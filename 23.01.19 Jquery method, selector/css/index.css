@@ -1,0 +1,12 @@
+   /* css 작성 _ 다른언어 */
+        /* css 주석*/
+        h1 {
+            color:chocolate;
+            background:aqua ;
+        }  /* h1 elemnet를 전부 찾기
+                color 전경색(글자색) -> 황토색으로 변경 "찾아서 적용" 
+                h1 block 영역 - 한줄 다 차지 => 따라서 배경색을 아쿠아색으로 전부 적용. */
+       img{
+            width: 200px;
+            /* 아까 html 속성태크에 쓰는 것이 아니라 style에 작성하는 것. */
+       }
