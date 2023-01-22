@@ -1,0 +1,46 @@
+<!-- 자동완성 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+    crossorigin="anonymous"></script>
+    <!--라이브러리 (로당) 선언 후에 작성한 자바스크립트를 호출. "순서 영향"-->
+     
+    <link rel="stylesheet" href ="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    
+   <script src="./js/0120_jquery01.js"></script>
+    <!-- 이시점에서 자바 js을 읽으면 (dom)구조 생성은 아직 미생성되서 수행하지 않음.  -->
+    <!-- bootstrap cdn을 포함해서 제공하는 css를 이용해 봄. -->
+
+</head>
+    <!-- 이벤트 propagation 이벤트 전파 -->
+ 
+<body>
+    <!-- form으로 감싼 형태만이 서버쪽에서 전달가능 -->
+    <form action="http://www.naver.com" method="post"> <!-- naver에게 form에 있는 데이터를 보냄.-->
+        <!-- <form action="http://www.naver.com" method="get"> -->
+        <select>
+            <option>서울</option>
+            <option>대구</option>
+            <option>부산</option>
+        </select>
+   
+    <br><br>
+    이름을 입력하세요 : <input type="text"> 
+    <!-- submit button은 일반 버튼과 다름
+        default event를 가지고 있음.
+    -->
+    <!-- 서버쪽에 값을 전달 type submit -->
+    <input type="submit" value="서버로 전송">
+    <!-- <button class="btn btn-primary">서버로 전송</button> -->
+   
+    </form>
+    나이을 입력하세요 : <input type="text"> <!--서버에 전달하지 않음 form 태그에 벗어남. -->
+
+</body>
+<br><Br>
+
+</html>
