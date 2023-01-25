@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- view.js를 이용해 봄, cdn을 포함시킴 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+</head>
+<body>
+    <DIV id="app">
+        {{message}}   <!-- // 중괄호안의 중괄호 -->
+        <Div id="myDiv"></Div>
+
+        <button v-on:click="myClick">클릭하세요.!</button> 
+        <!-- 클릭이라는 이벤트가 발생하면  (Vue 이벤트 처리)
+            v-on:click = myClick() X => undefined 반환
+         v-on:click = myClick O
+
+         vue 인스턴스 메서드에 있어야 함 myClick (메서드 이름)
+        -->
+    </DIV>
+    <!-- 위에서 부터 쭉 실행 -->
+    <script> 
+        //mvvm이 이런식으로 동작.//원래는 js 코드와 별개로 수행하지만 vue는 html에 밀어 넣음.
+        // vue 객체를(instance를 )생성
+        // new를 통해 객체 instance를 생성. 원래 사용자가 직접 만든 것이 아니기 때문에 
+        // 만들어진 view instance가 내가 원하는 일을 하는 객체여햐 함.
+        // 원하는 일을 객체 {} 안에 작성. ex) ajax 안에 객체를 넣는 방식 (정해져 있는 키값과 url을 명시. => 이거 대로 작동.)
+        new Vue({
+            el: '#app', // 이미 정해져 있음. element div에 부착이 됨. el은 컴포넌트에 부착되는 항목 지칭. // el 속성.
+            // vue 객체가 가지고 있는 변수.
+            data: {     //실제 데이터를 처리할 때 // diw 안에 있는 데이터 memsagee 지칭하여 (객체 )값을 지칭. => 데이터 바인딩 작업 // data 속성.
+                message : '소리없는 아우성!' //messag는 프러퍼티의 key에 해당.
+                // vue 객체의 message 프러퍼티로 수행. (data 따로 지정하지 않음.)
+            },
+            // vue 객체가 가지고 있는 함수
+            methods :{
+                myFunc :function(){
+                    console.log('여기는 myFunc');
+                },
+                myClick :function(){
+                    // 명시적으로 화면만 변경된 상태.
+                    console.log('버튼이 클릭');
+                    const myDiv = document.getElementById('myDiv') // 자바스크립트 구문, 화면에서 id가 #myDiv를 땡겨와서 문서객체를 가져옴.
+                     myDiv.innerText = '이순신 혼길동'
+
+                     // 실적적으로 데이터도 변경.
+                     this.message = '메시지가 변경되었어요.'
+                }
+            },
+            // hook method vue 객체의 요소에 들어가 있음.(원래 들어가 있지만, 현재 재정의 하므로 실습을 진행.)
+            // 자동적으로 객체 생성 후 beforeCreate hook method 수행
+            // 데이터와 메서드가 정의되지 않는 시점. (말 그대로 실제 객체는 만들어졌지만, 사용되기 이전 상태.)
+            beforeCreate : function(){
+                //beforeCreate hook method 
+                // instance가 생성되고 가장 처음실행되는 life cycle 단계
+                // 이 상태가 되면 자동으로 메서드가 호출됨.
+                console.log('beforeCreate 호출');
+                // 이 시점에는 아직 data 속성과 method 속성이 정의 되지 않는 시점.
+                // 그리고 또한 화면에 부착되지 않은 시점. (el, data 가 설정되지도 않는 시점.)
+
+                // console.log(this.data.message); 이 형태가 아님 .X
+                console.log(this.message); // vue가 가지고있는 message 데이터(변수)일 뿐.
+                                    // 아직 값이 부착 되지 않았으므로 undefined 
+            },
+
+            created : function(){
+                //create hook method
+                // 이 시점에는 데이터속성과 메서드 속성을 사용할 수 있음.
+                console.log('Created 호출');
+                console.log(this.message);
+                this.myFunc();
+            },
+            // 내가 사용할 데이터을 땡김. ex) ajax call 작업 
+
+            beforeMount : function (){
+                console.log('beforeMount 호출');
+                // 이 상태는 DOM 붙기 전이므로 vue 인스턴스에 부착하기 전.
+                // 아직 화면에 부착되지 않았기 때문에 화면제어를 할 수 없음.
+            },
+
+            // DOM이 제어 가능
+            mounted : function (){
+                console.log('Mounted 호출');
+                // "화면"에 vue instance가 붙은 직후에 호출되기 때문에 
+                // 화면제어를 할 수 있음.
+                // $('#myDiv').text('하이') jquery 방식
+                const myDiv = document.getElementById('myDiv') // 자바스크립트 구문, 화면에서 id가 #myDiv를 땡겨와서 문서객체를 가져옴.
+                myDiv.innerText = '하이하이' // 메서드가 아닌 속성으로 수행. 
+            },
+
+            // 데이터가 변해서 그 것을 갖고 화면의 렌더링하기 전에 호출.
+            // vue 인스턴스 (데이터)가 변경되어야 함.
+            beforeUpdate : function(){
+                    // 데이터가 변경된 후 화면에 다시 그리기전에 호출되는 Hook
+                console.log('beforeUpdate 호출');        
+                console.log('변경되었어요.');
+            },
+            updated : function(){
+                // 변경된 데이터를 가지고 화면에 다시보여줌.
+                console.log('Updated가 호출');
+            }
+
+        }); //자바스크립트 입장에서 객체 안에 프러퍼티  el 키와 '#app' value 값.
+    </script>
+</body>
+</html>
