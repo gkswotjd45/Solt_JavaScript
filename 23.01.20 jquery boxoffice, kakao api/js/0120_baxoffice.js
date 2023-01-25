@@ -1,4 +1,36 @@
-function myFunc(){
+    /*
+            function kakao(){
+                $.ajax({
+                    async : true,
+                    url : 'https://dapi.kakao.com/v2/search/image',
+                    type : 'GET',
+                    headers:{
+                        Authorization: 'KakaoAK 96fdece8cc50f83eb98699692a857f95'
+                    },
+                    data : {
+                        query : '아바타1'
+                    },
+                    dataType : 'json',
+            
+                    success : function(data){
+                        let imgurl = data.documents[0].thumbnail_url;
+                        let myimg = $('<img />').attr('src',imgurl);
+                        console.log('성공');
+                        return myimg;
+                        // $('div').append(myimg);
+                        //append, depend, after , before 등이 객체를 붙이는 형태.
+                      
+                    },
+                    error : function() {
+                        alert('에러');
+                    }
+                
+                }); 
+            
+            }; */// 영화 이미지
+
+
+function mymoiveSelect(){
     //alert('클릭 클릭');
     // ajaxx 호출 
     // jqeury를 이용해서 ajax 호출
@@ -40,27 +72,49 @@ function myFunc(){
                
             let che = $('<input />').attr('type','checkbox').attr('id','intputOneChecked'); 
             let rank=item.rank;   // 순위
-            let img = 'null'; // 영화 이미지
             let title=item.movieNm; //영화제목
             let audi=item.audiAcc;  //누적 관람객 수
             let open=item.openDt;  //개봉일
             //let del = $('<button />'). attr('class','btn btn-danger').text('삭제');
+            let img = $("<img />");
+
+        
+           
             let del = $('<button />'). attr('class','btn btn-danger').text('삭제').on("click",function(){
                 console.log("삭제");
                 $(this).closest("tr").remove();
             });
             
-      
-            
             let tr = $("<tr></tr>");
 
             let check = $("<td></td>").append(che);
             let ranktd = $("<td></td>").text(rank);
-            let imdtd = $("<td></td>").text(img);
+            let imdtd = $("<td></td>");
             let titletd = $("<td></td>").text(title);
             let auditd = $("<td></td>").text(audi);
             let opentd = $("<td></td>").text(open);
             let deletd = $("<td></td>").append(del);
+
+            $.ajax({
+                async: true,
+                url: 'https://dapi.kakao.com/v2/search/image',
+                type: 'GET',
+                headers: {
+                    Authorization: 'KakaoAK 1358282d53c290fdf77018c900369905'
+                },
+                data: {
+                    query: title + ' 포스터'
+                },
+                dataType: 'json',
+                success: function(data) {
+                    let imgurl = data.documents[0].thumbnail_url;
+                    img.attr('src',imgurl);
+                    imdtd.append(img)
+                },
+                error: function() {
+                    alert('먼가 이상해요!!')
+                }
+            });
 
             tr.append(check);
             tr.append(ranktd);
@@ -69,7 +123,7 @@ function myFunc(){
             tr.append(auditd);
             tr.append(opentd);
             tr.append(deletd);
-
+            
             $('tbody').append(tr);
                   
             });
@@ -116,3 +170,5 @@ function myFunc(){
 function myDelete(){
     console.log("삭제");
 }
+
+  
