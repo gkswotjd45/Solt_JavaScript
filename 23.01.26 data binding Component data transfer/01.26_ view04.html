@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- view.js를 이용해 봄, cdn을 포함시킴 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+</head>
+<body>
+    <!-- 특정 vue를 부착하기 위해 div 생성 -->
+    <!-- "app" Root compenet에 해당 하므로 임의로 작성한 컴포넌트는 그 하위항목(하부)에 있어야함. -->
+   <div id="app">
+    <!-- 상위 컴포넌트(root)가 가지고 있는 message를 하위 컴포넌트(전역) childe 컴포넌트를 propsData로 바인딩 시킴. 상위 컴포넌트 메시지를 하위 컴포넌트 메시지로 전달되어 출력--> 
+                <!-- 케밥 스타일 명시 -->
+    <child-component v-bind:props-data="message"></child-component>
+   </div>
+
+    <!-- vue js 코드 작성. -->
+    <!-- 그럼 html안에 js 코드를 낀겨 놓은 이유? 개념을 학습하기위해서 이런 방식을 현재 함. (한 곳에서 확인 할 수 있음) -->
+   <script>
+    // 컴포넌트 하나를 전역 컴포넌트로 등록하고, 
+    // "하위 컴포넌트" 해당.
+    Vue.component('child-component',{
+        // props를 이용해서 상위 컴포넌트가 전달하는 데이터를 받는 변수를 선언해요.
+        // (propsDate 변수는 기본적으로 "카멜케이스"가 기본.) (두번째 문자 대분자.) (아니면 싹다 소문자쓰던가) (
+        // 상위 커모넌트가 여러개 일수 도 있어서 배열형태로 받음.  props: ['propsDate','secondData']
+
+        // 1번째 방식.
+        // props: ['propsDate','secondData'], // 상위 컴포넌트가 전달해주는 데이터를 받는 공간
+
+        // 2번째 방식. 
+        // 이 방식이 자세하게 명시되므로 권장되는 방식,
+        // 카멜케이스 
+        props:{
+            // 변수가 키값으로 옴. value값은 데이터 타입을 나타내는 생성자 함수,
+            // 여러개 있으면 컴마 (,) 가 있지만, 1개만 사용해도 콤마(,) 있어도 됨.
+        // [카멜케이스]
+            propsData : String
+            // secondData : Number,
+        },
+        // 상위 컴포넌트에서 하위 값을 받음.
+
+        template: '<div>여기는 하위 컴포넌트예요. => {{propsData}} </div>',
+        // data(){
+        //     return {
+        //         myData: 200
+        //     }
+        // }
+        
+    })
+
+    
+    // vue 인스턴스에 하위 컴포넌트로 해당 컴포넌트를 포함시킬 꺼임
+    // "Root 컴포넌트"이고 root 컴포넌트를 하위 컴포넌트에게 전달 예점.
+    new Vue({
+        el: '#app',
+        data: {
+            message : '소리없는 아우성'
+        }
+
+    });
+    // vue instance 가 상위 Component가 되고 
+    // 포함되는 전역 컴포넌트는 하위 컴포넌트가 될 꺼임. 
+
+    // props를 이용하면 상위 컴포넌트에서 하위 컴포넌트로 데이터를 전달 할 수 있음. 
+    // vue instance의 data를 전역컴포넌트에게 전달할 수 있다.
+
+   </script>
+</body>
+</html>

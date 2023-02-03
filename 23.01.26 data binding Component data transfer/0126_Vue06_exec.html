@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <!-- jQuery를 사용하기 위한 CDN을 설정. -->    
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" 
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" 
+            crossorigin="anonymous">
+    </script>
+    
+    <!-- Vue.js를 이용해 보아요! CDN을 포함시켜요! -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app" v-on:print-global="dataSpec">
+        <global-component-a ></global-component-a>
+        <global-component-b v-on:print-b="printData"></global-component-b>
+    </div>  
+
+    <script>
+        Vue.component('global-component-a', {
+            template: `<div>
+                <local-component-c></local-component-c>
+                <local-component-d></local-component-d>
+            </div>`,
+            components: {
+                'local-component-c': {
+                    template: '<div>local component c</div>'
+                },
+                'local-component-d': {
+                    template: '<div> 처리된 데이터: {{ }} </div>'
+                },
+            },
+            methods:{
+                dataSpec: function(value){
+                    this.$emit('print-a',value);
+                    console.log(value);
+                }
+            }
+        });
+
+        Vue.component('global-component-b', {
+            template: '<local-component-f v-on:print-msg="printText"></local-component-f>',
+            components: {
+                'local-component-f': {
+                    template: `
+                    <div>
+                        <input type=text id='inputTxt'>
+                        <button v-on:click="btnClick">클릭클릭</button>
+                    </div>    
+                    `,
+                    methods: {
+                        btnClick: function() {
+                            alert($('#inputTxt').val());
+                            this.$emit('print-msg',$('#inputTxt').val());
+                        }
+                    }
+                }
+            },
+            methods : {
+                printText: function(value) {
+                    this.$emit('print-b',value);
+                    // console.log(value);
+                }
+            }
+        });
+
+        new Vue({
+            el: '#app',
+            methods :{
+                printData: function(value){
+                    this.$emit('print-global',value);
+                    //console.log(value);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

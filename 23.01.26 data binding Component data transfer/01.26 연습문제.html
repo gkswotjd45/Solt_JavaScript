@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+
+    <!-- jQuery를 사용하기 위한 CDN을 설정. -->    
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" 
+            integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" 
+            crossorigin="anonymous">
+    </script>
+    
+    <!-- Vue.js를 이용해 보아요! CDN을 포함시켜요! -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <global-component-a v-bind:my-string="message"></global-component-a>
+        <!-- 하위 컴포넌트인 Global 컴포넌트에 y -->
+        <global-component-b v-on:print-b="printData"></global-component-b>
+    </div>  
+
+    <script>
+        Vue.component('global-component-a', {
+            
+            template: `<div>
+                <local-component-c></local-component-c>
+                <local-component-d v-bind:my-data="myString"></local-component-d>
+            </div>`,
+            // mydata props에 상위 컴포넌트 mystring 값을 전달받음
+            //상위에서 내려온 것을 props로 받음
+            props:{
+                myString: String
+                // 두단어이상 카멜케이스로 지정.
+            },
+            components: {
+                'local-component-c': {
+                    template: '<div>local component c</div>'
+                },
+                'local-component-d': {
+                    template: '<div> 처리된 데이터: {{ myData }} </div>',
+
+                    //상위 컴포넌트에서 받을 데이터를 공간 지정
+                    // 상위 컴포넌트 A에서 내려받을 변수.
+                    props :{
+                        myData: String
+                    }
+                },
+            },
+         
+
+        });
+
+        Vue.component('global-component-b', {
+            template: '<local-component-f v-on:print-msg="printText"></local-component-f>',
+            components: {
+                'local-component-f': {
+                    template: `
+                    <div>
+                        <input type=text id='inputTxt'>
+                        <button v-on:click="btnClick">클릭클릭</button>
+                    </div>    
+                    `,
+                    methods: {
+                        btnClick: function() {
+                            alert($('#inputTxt').val());
+                            this.$emit('print-msg',$('#inputTxt').val());
+                            // 여기에 컴포넌트에 print-msg 이벤트 발생. => printText 호출 => 인자값도 전달.
+                        }
+                    }
+                }
+            },
+            methods : {
+                printText: function(value) {
+                    //이벤트 발생.
+                    this.$emit('print-b',value);
+                    // console.log(value);
+                }
+            }
+        });
+
+        new Vue({
+            el: '#app',
+            
+            data : {
+                message:''
+            },
+            // data : function(){
+            //     return{
+            //         myData : this.printData,
+            //     }
+            // },
+
+            methods :{
+                printData: function(value){
+                    //this.$emit('print-global',value);
+                    this.message = value;
+                    // this 키워드를 명시해야함. 입력 안할시 새로운 변수를 생성시킴. 
+
+                    //console.log(value);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

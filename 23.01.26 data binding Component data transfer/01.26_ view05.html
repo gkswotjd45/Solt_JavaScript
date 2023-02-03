@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- view.js를 이용해 봄, cdn을 포함시킴 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+</head>
+<body>
+  
+   <div id="app">
+
+    <child-component v-on:print_msg="printText"></child-coponent>
+    <!-- ☆ child 컴포넌트 (하부)컴포넌트에 print_msg 이벤트가 발생했을때, (상위) 컴포넌트 printText를 수행시켜라. -->
+
+
+    <!-- 나한테 print_msg가 발생하면 상위컴포넌트 printText 를 수행. -->
+   </div>
+
+   <script>
+    // 전역 component로 만들꺼고, Root Component의 하위로 사용할 꺼임. 
+    // 케밥스타일
+    Vue.component('child-component',{
+        // <버튼>에서 클릭이라는 이벤트가 발생하면 상위 컴포넌트(child에게)전달. 
+        // childClick은 (더블 쿼테이션)으로 "함수 이름".  상위 컴포넌트 핸들러 = childFUnc을 가지고 있어여함 => child-componet에서 명시.
+        template: '<button v-on:click="childFunc">클릭클릭</button>',
+        // ☆ 하위 기본 컴포넌트에 해당하는 버튼에 클릭이라는 이벤트가 발생했을 때, 
+        // 상위 컴포넌트(child-component)에 해당하는 함수(메서드)인 childFunc 수행해라.
+
+        // 컴포넌트 변수 명시.
+        data(){
+            return {
+                myData : 200
+            }
+        },
+        // 컴포넌트 함수들 명시.// 이벤트 처리함수를 명시
+        methods:{
+            // 함수표현식으로 표현된 형태
+            childFunc : function(){
+                //alert('버튼이 클릭되었어요');
+
+                // 버튼이 발생했던 것 처럼.
+                this.$emit('print_msg',100,'hello',{
+                    msg: '전달된 이벤트'
+                })
+                // ☆ 이 메서드를 가지고 있는 객체 (Child Component)에 print_msg 이름을 가진 이벤트를 발생시켜라 
+                // ☆ print msg 이름을 가진 이벤트는 100 (number), hello, 객체 (property msg라는 키와 value 값인 '전달된 이벤트') 가지고 있음.
+
+                // this = 이 메서드를 갖고 있는 객체0
+                // $emit 이벤트를 발생시키는 형태.
+                // print_msg 내가 임의로 정의한 이벤트 이름
+                // 이벤트 핸들러 
+            }
+        }
+    });
+
+    // 상위 컴포넌트.
+    new Vue({
+        el:'#app',
+        methods:{
+            printText: function(...args){
+                console.log('이벤트 발생 ');
+                console.log(args[0]); // 100
+                console.log(args[1]); // hello
+                console.log(args[2].msg); // '전달된 이벤트' 
+            }
+            // Rest 파라미터 - 함수에 전달된 인수의 목록을 배열로 전달 받음.
+            //☆ 상부 컴포넌트의 printText (함수) 메서드는 print_msg 발생시킨 인자 값을 (Rest 파라미터)로 표출한다. 
+
+        }
+    });
+    
+    
+   </script>
+</body>
+</html>

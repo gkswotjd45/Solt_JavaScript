@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- view.js를 이용해 봄, cdn을 포함시킴 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+</head>
+<body>
+    <!-- 특정 vue를 부착하기 위해 div 생성 -->
+    <!-- "app" Root compenet에 해당 하므로 임의로 작성한 컴포넌트는 그 하위항목(하부)에 있어야함. -->
+   <div id="app">
+    <my-component1></my-component1>
+    <my-component2></my-component2>
+   </div>
+
+    <!-- vue js 코드 작성. -->
+    <!-- 그럼 html안에 js 코드를 낀겨 놓은 이유? 개념을 학습하기위해서 이런 방식을 현재 함. (한 곳에서 확인 할 수 있음) -->
+   <script>
+    // 지역 컴포넌트를 2개 만들어서 사용,
+
+    let cmp1 ={
+        template: '<div>첫번째 지역 component : {{cmp1Data }}</div>',
+        data : function(){
+            return {
+                // cmp1 내에서만 유효한 데이터 형태임.
+                cmp1Data : 100
+            }
+        }
+    }
+
+    let cmp2 = {
+        template: '<div>두번째 지역 component : {{cmp2Data }}</div>',
+        data(){
+            return {
+                // cmp1data을 사용할려고 할때 
+                // 어떻게 해야 첫번째 component의 data를사용할 수 있나?
+                // 컴포넌트 끼리 데이터를 따로 갖고 있지만 다른 컴포넌트의 데이터를 가져올 방법 직접 (다이렉트) 없음.
+                // 한 컴포넌트에서 다른 컴포넌트의 데이터를 직접 access 방법은 없음. 
+            
+                cmp2Data : cmp1.data.cmp1Data 
+            }
+        }
+    }
+    // ROot 컴포넌트 
+    new Vue({
+        el : '#app',
+        components : {
+            // 각각의 컴포넌트를 지역 컴포넌트로 등록,
+            'my-component1' : cmp1,
+            'my-component2' : cmp2
+        }
+    })
+   </script>
+</body>
+</html>

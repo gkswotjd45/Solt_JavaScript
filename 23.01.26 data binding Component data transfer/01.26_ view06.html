@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- view.js를 이용해 봄, cdn을 포함시킴 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+</head>
+<body>
+  <!-- evenetBus를 이용해서 하위 컴포넌트에서 상위 component event를 전달-->
+
+   <div id="app">
+    <child-component></child-coponent>
+    <!-- ☆하부 컴포넌트(child-component) 를 붙인다 -->
+  
+   </div>
+
+   <script>
+    // eventBus를 이용하기 위해 vue instance를 생성.->
+    // vue가 이벤트 버스 역할
+    let eventBus =  new Vue();
+    // 하위 component로 사용할 전역 Component를 등록해봄.
+    Vue.component('child-component',{
+        template : '<button v-on:click="btnClick">클릭클릭</button>',
+        //☆ 하부 컴퍼넌트인 child-component에 template  수행한다.
+        //☆ template은 버튼에 기본메서드인 click 이벤트를 수행했을 때, 상위 컴포넌트(child-compoent)에 있는 btnClick을 수행해라.
+        methods:{
+            btnClick: function(){
+                // eventBus에 대해서 event를 발생시킴. 
+                eventBus.$emit('generateEvent',300)
+                // ☆ 이벤트 버스를 실행시켜라 (grenerateEvent 이름을 가진 이벤트, 인자를 300을 가진)
+                // 버튼이 클릭하면 이벤트버스에 대해서 'generateEvent' 이름으로 300을 전달. 
+
+            }
+        }
+    });
+
+    // Root Component
+    new Vue({
+        el: '#app',
+        // vue의 인스턴스가 만들어지기 직전에 
+
+        // 메서드와 변수가 들어왔을 때 시점.
+        created: function(){
+            // 이벤트 버스에 대해서 이벤트를 등록해 놓음
+            // 이벤트 호출
+            eventBus.$on('generateEvent', function(value){
+                console.log('이벤트 발생!',value);
+            })
+            // ☆ 이벤트 버스에 해당하는 generateEvent가 수행되면, 함수 객체에 작성된 (이벤트 발생 및 인자를 보여준다.)
+        }
+
+    })
+
+
+    
+   </script>
+</body>
+</html>

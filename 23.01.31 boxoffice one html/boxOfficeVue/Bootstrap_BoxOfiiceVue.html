@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Boxofiice template </title>
+  <!-- jquery cdn 설정. -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-router@3.5.3/dist/vue-router.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
+    integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    .b-example-divider {
+      height: 3rem;
+      background-color: rgba(0, 0, 0, .1);
+      border: solid rgba(0, 0, 0, .15);
+      border-width: 1px 0;
+      box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+    }
+
+    .b-example-vr {
+      flex-shrink: 0;
+      width: 1.5rem;
+      height: 100vh;
+    }
+
+    .bi {
+      vertical-align: -.125em;
+      fill: currentColor;
+    }
+
+    .nav-scroller {
+      position: relative;
+      z-index: 2;
+      height: 2.75rem;
+      overflow-y: hidden;
+    }
+
+    .nav-scroller .nav {
+      display: flex;
+      flex-wrap: nowrap;
+      padding-bottom: 1rem;
+      margin-top: -1px;
+      overflow-x: auto;
+      text-align: center;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+    }
+  </style>
+
+  <!-- Custom styles for this template -->
+</head>
+
+<body>
+  <div id="app">
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+      <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">BoxOffice</a>
+      <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+        data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <!-- 입력상자 -->
+      <input class="form-control form-control-dark w-100 rounded-0 border-0" type="date" placeholder="Search"
+        aria-label="Search" v-model="selectDate">
+
+      <div class="navbar-nav">
+        <div class="nav-item text-nowrap">
+          <a class="nav-link px-3" href="#" v-on:click="myFunc">검색!</a>
+          <!-- #은 자기자신을 다시 불름 -->
+        </div>
+      </div>
+    </header>
+    <div class="container-fluid">
+      <div class="row">
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+          <div class="position-sticky pt-3 sidebar-sticky">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">
+                  <span data-feather="home" class="align-text-bottom"></span>
+                  날짜별 박스오피스 순위
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <h2>영화 순위</h2>
+          <div>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped table-sm" id="moveList">
+              <thead>
+                <th v-for="column in header"> {{column}}</th>
+              </thead>
+              <tbody>
+                <tr v-for="(row, index) in movielist" :key="index" :row="row">
+                  <td>{{row.rank}}</td>
+                  <td><img v-bind:src="row.img"></td>
+                  <!-- <td v-on:click="myFind">{{row.name}}</td> -->
+                  <td ref="#" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                    v-on:click=[showModal(),myFind(row)]>
+                    {{row.name}}</td>
+                  <td>{{row.audi}}</td>
+                  <td>{{row.mvdate}}</td>
+                  <td><button class="btn btn-danger" v-on:click=[removeRow(index)]>삭제</button></td>
+                  <!-- <td v-for="item in low">{{ item }}</td>  -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </main>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header" v-for="select in moviedetail">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{select.name}}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" v-for="select in moviedetail">
+                <div>제작연도: {{select.year}} </div>
+                <div>제작국가: {{select.nation}}</div>
+                <div>감독: {{select.coach}}</div>
+                <div>배우정보: {{select.actor}}</div>
+                <div>상영시간: {{select.time}}</div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let main = new Vue({
+      data: {
+        header: ['순위', '포스터', '제목', '누적수', '개봉일', '삭제'],
+        movielist: [],
+        moviedetail: [
+          // {
+          // name: ,
+          // year: ,
+          // nation: ,
+          // coach: ,
+          // actor: ,
+          // time: 
+          // }
+        ],
+        selectDate: '',
+
+        open: false,
+        // selectName : moviedetail.find(isFind)
+      },
+      methods: {
+        removeRow: function (index) {
+          this.movielist.splice(index, 1);
+        },
+        // 모델 출력 및 닫기 메서드
+        showModal: () => {
+          this.open = !this.open;
+        },
+        // 영화목록 초기화
+        del: () => {
+          this.movielist = [];
+        },
+        myFunc: function () {
+          this.del(); // 클릭시 테이블 초기화
+          axios(
+            {
+              url: 'http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json',
+              method: 'GET',
+              params: {
+                key: '97121f3d440e8f6f236416da6aa305e2',
+                targetDt: this.selectDate.replace(/-/g, '')
+              },
+              responseType: 'json'
+            }).then((result) => {
+              alert('영화 성공');
+              let arr = result.data.boxOfficeResult.dailyBoxOfficeList;
+              //console.log(arr)
+              //let entryMovie = [] // 10개의 영화정보 및 url 담은 객채 배열
+              arr.forEach((element) => {
+                //console.log(element);
+                let movie = {
+                  rank: '',
+                  img: '',
+                  name: '',
+                  audi: '',
+                  mvdate: '',
+                  code: '',
+                }
+                axios(
+                  {
+                    url: 'https://dapi.kakao.com/v2/search/image',
+                    method: 'GET',
+                    headers: {
+                      Authorization: 'KakaoAK 96fdece8cc50f83eb98699692a857f95'
+                    },
+                    params: {
+                      query: element.movieNm + '영화 포스터'
+                    },
+                    responseType: 'json'
+                  }).then(function (result) {
+                    // alert('카카오 성공')
+                    let img = result.data.documents[0].thumbnail_url;
+                    movie.img = img;
+                    //console.log(img);
+                  }).catch(function () {
+                    // alert('카카오 실패');
+                  })
+
+                movie.rank = element.rank;
+                movie.name = element.movieNm;
+                movie.audi = element.audiAcc;
+                movie.mvdate = element.openDt;
+                movie.code = element.movieCd;
+                main.movielist.push(movie);
+              });
+            }).catch(function () {
+              // alert('영화 실패');
+            })
+
+        },
+        myFind: function (result) {
+          // console.log(data);
+          this.moviedetail = [];
+          let detail = {
+            name: '',
+            year: '',
+            nation: '',
+            coach: '',
+            actor: '',
+            time: ''
+          }
+          axios({
+            url: 'http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.json',
+            method: 'GET',
+            params: {
+              key: '97121f3d440e8f6f236416da6aa305e2',
+              movieCd: result.code // 임의지정
+            },
+            responseType: 'json'
+          }).then((result) => {
+            // console.log(result.data.movieInfoResult.movieInfo);
+            detail.name = result.data.movieInfoResult.movieInfo.movieNm;
+            detail.year = result.data.movieInfoResult.movieInfo.prdtYear;
+            detail.nation = result.data.movieInfoResult.movieInfo.nations[0].nationNm;
+            detail.coach = result.data.movieInfoResult.movieInfo.directors[0].peopleNm;
+            detail.actor = result.data.movieInfoResult.movieInfo.actors[0].peopleNm;
+            detail.time = result.data.movieInfoResult.movieInfo.showTm
+            //console.log(detail);
+          }).catch(function () {
+          })
+          main.moviedetail.push(detail);
+        }
+      },
+    }).$mount("#app");
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router@3.5.3/dist/vue-router.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+</head>
+
+<style>
+    table {
+        width: 75%;
+        margin: 10%;
+        text-align: left;
+    }
+
+    tanle th {
+        padding: 12px;
+        border-bottom: 2px solid darkgray;
+    }
+
+    table td {
+        padding: 12px;
+    }
+
+    table tr:nth-of-type(even) {
+        background-color: rgba(0, 0, 255, 0.1);
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div style="position: fixed; top: 2px; left: 500px">
+            <h1>일별 박스오피스 목록</h1>
+        </div>
+        <div style="position: fixed; top: 100px; left: 160px">일자 :
+            <!-- <input type="text" v-model="myTxt"> -->
+            <input type="text" v-model="selectDate">
+            <!-- <input type="text"> -->
+            <button v-on:click="myFunc">검색</button>
+        </div>
+        <div>
+            <table>
+                <thead>
+                    <th v-for="column in header"> {{column}}</th>
+                </thead>
+                <tbody>
+                    <tr v-for="low in movielist">
+                        <td>{{low.rank}}</td>
+                        <td><img v-bind:src="low.img"></td>
+                        <td v-on:click="showModal">{{low.name}}</td>
+                        <td>{{low.audi}}</td>
+                        <td>{{low.mvdate}}</td>
+                        <!-- <td v-for="item in low">{{ item }}</td>  -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="myModal" data-backdrop="static" data-keyboard="false" v-show="open">
+            <div class="modal-dialog modal-xl modal-dialog-centered"
+                style="position: fixed; top: 100px; left: 600px;background-color: rgb(230, 201, 167);">
+                <div class="modal-content">
+                    <div class="modal-header" v-for="select in moviedetail" v-on:find="findOne">
+                        <h4 class="modal-title">{{select.name}}</h4>
+                    </div>
+                    <div class="modal-body" v-for="select in moviedetail" >
+                        <div>제작연도: {{select.year}} </div>
+                        <div>제작국가: {{select.nation}}</div>
+                        <div>감독: {{select.coach}}</div>
+                        <div>배우정보: {{select.actor}}</div>
+                        <div>상영시간: {{select.time}}</div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" v-on:click="showModal">Close</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- <div v-show="open">
+            <div style="position: fixed; top: 100px; left: 700px" >
+            <h5>뷰 출력</h5>
+            <p>v-if와 v-show로 모달창을 띄워봅시다.</p>
+            <button v-on:click="showModal" type="button">닫기</button>
+            </div>
+        </div> -->
+    </div>
+    <script>
+        let main = new Vue({
+            data: {
+                header: ['순위', '포스터', '이미지', '누적수', '개봉일'],
+                movielist: [],
+                moviedetail: [
+                    // {
+                    // name: ,
+                    // year: ,
+                    // nation: ,
+                    // coach: ,
+                    // actor: ,
+                    // time: 
+                    // }
+                ],
+                selectDate: '',
+                open: false,
+            },
+            methods: {
+                // 모델 출력 및 닫기 메서드
+                showModal: function () {
+                    this.open = !this.open;
+                },
+                // 영화 
+                add: function (data) {
+                    //console.log(data);
+                    this.movielist.push(data);
+                },
+                del: function () {
+                    this.movielist = [];
+                },
+                myFunc: function () {
+                    this.del(); // 클릭시 테이블 초기화
+                    axios(
+                        {
+                            url: 'http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json',
+                            method: 'GET',
+                            params: {
+                                key: '97121f3d440e8f6f236416da6aa305e2',
+                                targetDt: main.selectDate
+                            },
+                            responseType: 'json'
+                        }).then((result) => {
+                            alert('영화 성공');
+                            let arr = result.data.boxOfficeResult.dailyBoxOfficeList;
+                            //console.log(arr)
+                            //let entryMovie = [] // 10개의 영화정보 및 url 담은 객채 배열
+                            arr.forEach((element) => {
+                                //console.log(element);
+                                let movie = {
+                                    rank: '',
+                                    img: '',
+                                    name: '',
+                                    audi: '',
+                                    mvdate: '',
+                                    code: '',
+                                }
+                                let detail = {
+                                    name:'',
+                                    year: '',
+                                    nation: '',
+                                    coach: '',
+                                    actor: '',
+                                    time: ''
+                                }
+                                axios(
+                                    {
+                                        url: 'https://dapi.kakao.com/v2/search/image',
+                                        method: 'GET',
+                                        headers: {
+                                            Authorization: 'KakaoAK 96fdece8cc50f83eb98699692a857f95'
+                                        },
+                                        params: {
+                                            query: element.movieNm + '영화 포스터'
+                                        },
+                                        responseType: 'json'
+                                    }).then(function (result) {
+                                        // alert('카카오 성공')
+                                        let img = result.data.documents[0].thumbnail_url;
+                                        movie.img = img;
+                                        //console.log(img);
+                                    }).catch(function () {
+                                        // alert('카카오 실패');
+                                    })
+
+                                movie.rank = element.rank;
+                                movie.name = element.movieNm;
+                                movie.audi = element.audiAcc;
+                                movie.mvdate = element.openDt;
+                                movie.code = element.movieCd;
+                                axios({
+                                    url: 'http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.json',
+                                    method: 'GET',
+                                    params: {
+                                        key: '97121f3d440e8f6f236416da6aa305e2',
+                                        movieCd: element.movieCd
+                                    },
+                                    responseType: 'json'
+                                }).then((result) => {
+                                    // console.log(result.data.movieInfoResult.movieInfo);
+                                    detail.name = element.movieNm;
+                                    detail.actor = result.data.movieInfoResult.movieInfo.actors[0].peopleNm;
+                                    // console.log(detail.actor);
+                                    detail.coach = result.data.movieInfoResult.movieInfo.directors[0].peopleNm;
+                                    detail.nation = result.data.movieInfoResult.movieInfo.nations[0].nationNm;
+                                    detail.time = result.data.movieInfoResult.movieInfo.showTm
+                                    detail.year = result.data.movieInfoResult.movieInfo.prdtYear
+                                    // console.log(detail);
+                                }).catch(function () {
+                                    alert('세부정보 실패')
+                                })
+                                main.moviedetail.push(detail);
+                                main.movielist.push(movie);
+                                //main.add({ rank: element.rank, img: movie.img, name: element.movieNm, audi: element.audiCnt, mvdate: element.openDt });
+                            });
+                            //  console.log(entryMovie);
+                            //  main.movielist = entryMovie;
+                            // console.log(main.movielist);
+                            console.log(main.moviedetail[0]);
+                        }).catch(function () {
+                            // alert('영화 실패');
+                        })
+
+                },
+            },
+
+        }).$mount("#app");
+    </script>
+</body>
+
+</html>

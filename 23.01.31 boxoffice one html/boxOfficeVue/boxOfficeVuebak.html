@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <script src="https://unpkg.com/vue-router@3.5.3/dist/vue-router.js"></script>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<style>
+    table {
+        width: 75%;
+        margin: 10%;
+        text-align: left;
+    }
+
+    tanle th {
+        padding: 12px;
+        border-bottom: 2px solid darkgray;
+    }
+
+    table td {
+        padding: 12px;
+    }
+
+    table tr:nth-of-type(even) {
+        background-color: rgba(0, 0, 255, 0.1);
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div style="position: fixed; top: 2px; left: 500px">
+            <h1>일별 박스오피스 목록</h1>
+        </div>
+        <div style="position: fixed; top: 100px; left: 160px">일자 :
+            <!-- <input type="text" v-model="myTxt"> -->
+            <input type="text" v-model="selectDate">
+            <!-- <input type="text"> -->
+            <button v-on:click="myFunc">검색</button>
+        </div>
+        <div>
+            <table>
+                <thead>
+                    <th v-for="column in header"> {{column}}</th>
+                </thead>
+                <tbody>
+                    <tr v-for="low in movielist">
+                        <td>{{low.rank}}</td>
+                        <td><img v-bind:src ="low.img"></td>
+                        <td>{{low.name}}</td>
+                        <td>{{low.audi}}</td>
+                        <td>{{low.mvdate}}</td>
+                        <!-- <td v-for="(item, index) in low" :key="index">{{item}}</td> -->
+                        <!-- <td v-for="item in low">{{ item }}</td>  -->
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // let eventBus = new Vue();
+        // Vue.component('child-component', {
+
+        // });
+
+        let main = new Vue({
+            data: {
+                header: ['rank', 'poster', 'movie', 'audience', 'open'],
+                movielist: [ ],
+                selectDate: '',
+                urlimg: ''
+            },
+            methods: {
+                add: function (data) {
+                    //console.log(data);
+                    this.movielist.push(data);
+                },
+                myFunc: function () {
+                    axios(
+                        {
+                            url: 'http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json',
+                            method: 'GET',
+                            params: {
+                                key: '97121f3d440e8f6f236416da6aa305e2',
+                                targetDt: main.selectDate
+                            },
+                            responseType: 'json'
+                        }).then((result) =>{
+                            alert('영화 성공');
+                            let arr = result.data.boxOfficeResult.dailyBoxOfficeList;
+
+                            //console.log(arr)
+                            let entryMovie = [] // 10개의 영화정보 및 url 담은 객채 배열
+                            let img = ''
+                            arr.forEach((element) => {
+
+                                let movie = {
+                                    rank: '',
+                                    img: img,
+                                    name: '',
+                                    audi: '',
+                                    mvdate: '',
+                                }
+                                axios(
+                                    {
+                                        url: 'https://dapi.kakao.com/v2/search/image',
+                                        method: 'GET',
+                                        headers: {
+                                            Authorization: 'KakaoAK 96fdece8cc50f83eb98699692a857f95'
+                                        },
+                                        params: {
+                                            query: element.movieNm + '영화 포스터'
+                                        },
+                                        responseType: 'json'
+                                    }).then(function (result) {
+                                        // alert('카카오 성공')
+                                        // img = result.data.documents[0].thumbnail_url;
+                                        movie.img = result.data.documents[0].thumbnail_url
+                                        // movie.img = img;
+                                        //console.log(img);
+                                    }).catch(function () {
+                                        // alert('카카오 실패');
+                                    })
+                                movie.rank = element.rank;
+                                movie.name = element.movieNm;
+                                movie.audi = element.audiCnt;
+                                movie.mvdate = element.openDt; 
+                                entryMovie.push(movie);
+                                //main.add({ rank: element.rank, img: movie.img, name: element.movieNm, audi: element.audiCnt, mvdate: element.openDt });
+                            });
+                            //  console.log(entryMovie);
+                             main.movielist = entryMovie;
+                             console.log(this);
+                        }).catch(function () {
+                            // alert('영화 실패');
+                        })
+
+                },
+            },
+
+        }).$mount("#app");
+    </script>
+</body>
+
+</html>
