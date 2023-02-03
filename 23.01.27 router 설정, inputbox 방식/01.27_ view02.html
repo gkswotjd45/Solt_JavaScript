@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- view.js를 이용해 봄, cdn을 포함시킴 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+
+    <script src="https://unpkg.com/vue-router@3.5.3/dist/vue-router.js"></script>
+
+</head>
+<body>
+
+   <div id="app"> 
+
+    <!-- 여기에 라우터 보여줌 -->
+    <router-view></router-view>    
+   </div>
+    
+    <script>
+        //member 컴포넌트 생성. (자식 포함할 수 있는 컴포넌트)
+        let memberComponent ={
+            template: 
+                `<div> 
+                    여기는 memeber componenet 입니다.
+                    <router-view></router-view> 
+                </div>`
+                //멤버 컴퍼넌트 안에서도 라우팅이 일어나야 함.
+                // 라우팅에의해서 다시 라우팅이 일어날 수 있도록 표현,
+                // 이 템플릿을 가지고 상위 <body>  <router-view></router-view>  div에 붙임
+        }
+
+        // profile 컴포넌트 생성.
+        let profileComponent ={
+            template : `<div> 
+                    여기는 profile componenet 입니다.
+                </div>`
+        }
+
+        //post 컴포넌트도 만들어 봄.
+        let postComponent = {
+            template: `<div>여기는 post컴포넌트 </div>`
+        }
+
+        // 컴포넌트를 다 만들었으니, 이제 경로를 설정하러 가봄
+        // 어떤 경로가 어떤 컴포넌트와 매칭되는지 설정. 
+        let routes = [{
+            path: '/member',
+            component : memberComponent,
+            // 이 라우팅안에서 다시 라우팅이 발생. 
+            children: [{
+                path:'profile', // /member/profile
+                component:profileComponent
+                // 이 컴포넌트들 member컴포넌트 하위에 저장된 <
+            },{
+                path:'post',
+                component:postComponent
+            }]
+            // /member 경로 입력하면 해당 컴포넌트에 가서.  <router-view></router-view>  붙임.
+        }]
+
+        //경로를 다 만들었으면, 그 다음에는 VueRouter객체를 생성.
+        let router = new VueRouter({
+            routes:routes
+            //키값과 속성의 이름 동일
+        })
+
+        new Vue({
+            // router:router
+            router
+        }).$mount('#app')
+
+    </script>
+    
+</body>
+</html>

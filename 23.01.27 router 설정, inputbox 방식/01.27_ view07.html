@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- view.js를 이용해 봄, cdn을 포함시킴 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+
+
+    <script src="https://unpkg.com/vue-router@3.5.3/dist/vue-router.js"></script>
+    <!-- axios를 위한 CDN 방식 -->
+    <!-- 제이쿼리랑 똑같음 -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+</head>
+<body>
+
+   <div id="app"> 
+     
+        <div>{{message}}</div>
+
+        <!-- 간단한 연산 가능. 이 안의 문자열이면 그 내용을 그대로 찍어서 표현 -->
+        <div>{{message + "!!!"}}</div>
+
+        <!-- 아래에 있는 표현은 가능은 하지만 좋지는 않죠. {{ }}는 가능한 값만 꽝 찍는 역할을 하느게 좋음. (다 있는 문자열을 딱 찍는 역할) -->
+        <!-- 아래 같은 경우는 함수를 따로 만들어서 사용하는게 좋음  -->
+        <!-- 하나씩 잘라서 ->  역순으로 수행 -> 조인으로 합침 ('') 연결자 없이 수행 = 어차피 문자열. -->
+        <!-- <div>{{message.split('').reverse().join('')}}</div>       -->
+
+
+        <!-- <div>{{let a = 100;}}</div> 에러 발생. 신텍스 문장이기 때문에  -->
+        <!-- <div>{{if(true) {return 100} }}</div> 당연히 안됨 -->
+
+        <!-- 삼항 연사자는 예외 => 값으로 표현함. 많이 쓰임 -->
+        <div>{{true ? 10 : 100 }}</div> 
+
+
+        <!-- <div>{{message.split('').reverse().join('')}}</div>      -->
+        <!-- 위에 있는 코드는 좋지 않아서 함수로 따로 만들어 볼꺼임. -->
+        <div>{{ myFunc() }}</div>
+
+        <!-- myComputed() 호출하는 것이 아니라, myComputed 쓰임-->
+        <div>{{ myComputed }}</div>
+        <div>{{ myComputed }}</div>
+        <!-- 이런 함수와 약간 다른 성능이 좋은 기능이 있음. -->
+   </div>
+    
+    <script>
+
+      new Vue({
+        data:{
+            message: '소리없는 아우성'
+        },
+        methods:{
+            // 내가 명시적으로 호출하는 방식
+            myFunc: function(){
+                console.log('함수호출');
+                return this.message.split('').reverse().join('') 
+            }
+        },
+        
+        
+        computed:{
+            // 이 함수는 1번만 호출 (만들어지고 ) = 계산된 
+            // 이방식은 호출되는 게 아니라, 미리 계산되어 놓아서 결과를 미리 저장해놓아서 가져다 쓰임. -> 
+            // 내가 명시적으로 호출하는 방식이 X
+            myComputed: function(){
+                console.log('Computed 호출');
+                return this.message.split('').reverse().join('') 
+            }
+        }
+      }).$mount('#app')
+    </script>
+    
+</body>
+</html>
